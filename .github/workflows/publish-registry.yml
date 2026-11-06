@@ -1,0 +1,95 @@
+name: Publish to MCP Registry
+
+# Manual only: Actions tab -> "Publish to MCP Registry" -> Run workflow.
+# Needs the repo secret MCP_DNS_PRIVATE_KEY (see docs/PUBLISHING.md).
+on:
+  workflow_dispatch:
+    inputs:
+      old_version_status:
+        description: "What to do with v1.0.0 (points at a private repo) after publishing"
+        type: choice
+        options:
+          - deprecated
+          - deleted
+          - leave alone
+        default: deprecated
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mcp-registry-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      # Pin deliberately; bump when the registry docs tell you to.
+      MCP_PUBLISHER_VERSION: v1.8.8
+      MCP_DOMAIN: acriumautomated.com
+      SERVER_NAME: com.acriumautomated/acrium
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Download and verify mcp-publisher
+        run: |
+          set -euo pipefail
+          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          arch="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          archive="mcp-publisher_${os}_${arch}.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+
+          curl --fail --location --silent --show-error --output "$archive" "$base_url/$archive"
+          curl --fail --location --silent --show-error --output "$archive.sigstore.json" "$base_url/$archive.sigstore.json"
+          cosign verify-blob \
+            --bundle "$archive.sigstore.json" \
+            --certificate-identity "https://github.com/modelcontextprotocol/registry/.github/workflows/release.yml@refs/tags/${MCP_PUBLISHER_VERSION}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "$archive"
+          tar xzf "$archive" mcp-publisher
+          rm -f "$archive" "$archive.sigstore.json"
+
+      - name: Validate server.json
+        run: ./mcp-publisher validate server.json
+
+      - name: Authenticate to MCP Registry (DNS)
+        env:
+          MCP_DNS_PRIVATE_KEY: ${{ secrets.MCP_DNS_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MCP_DNS_PRIVATE_KEY}" ]; then
+            echo "::error::Repo secret MCP_DNS_PRIVATE_KEY is not set. See docs/PUBLISHING.md."
+            exit 1
+          fi
+          ./mcp-publisher login dns --domain "${MCP_DOMAIN}" --private-key "${MCP_DNS_PRIVATE_KEY}"
+
+      - name: Publish server to MCP Registry
+        run: ./mcp-publisher publish
+
+      - name: Set status of v1.0.0
+        if: ${{ inputs.old_version_status != 'leave alone' }}
+        env:
+          NEW_STATUS: ${{ inputs.old_version_status }}
+        run: |
+          set -euo pipefail
+          ./mcp-publisher status --status "${NEW_STATUS}" \
+            --message "Superseded by 1.0.2. Source: https://github.com/ehtyn/acrium-mcp" \
+            "${SERVER_NAME}" 1.0.0
+
+      - name: Show what the registry now lists
+        if: always()
+        run: |
+          curl --fail --silent --show-error \
+            "https://registry.modelcontextprotocol.io/v0.1/servers?search=${SERVER_NAME}&include_deleted=true" \
+            | jq '.servers[] | {version: .server.version, status: ._meta["io.modelcontextprotocol.registry/official"].status, isLatest: ._meta["io.modelcontextprotocol.registry/official"].isLatest}' \
+            || true
+
+      - name: Log out
+        if: always()
+        run: ./mcp-publisher logout || true

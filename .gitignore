@@ -1,0 +1,5 @@
+# Registry signing keys must never be committed (see docs/PUBLISHING.md)
+*.pem
+*.key
+mcp-publisher
+.mcpregistry_*

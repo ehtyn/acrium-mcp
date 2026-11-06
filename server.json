@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.acriumautomated/acrium",
-  "description": "Let your AI run Google Ads, social posting, Shopify, inventory and phone calls for your business.",
+  "description": "Post to social media, run Google Ads, manage Shopify, inventory and phone calls from your AI.",
   "title": "Acrium",
   "repository": {
     "url": "https://github.com/ehtyn/acrium-mcp",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.2",
   "websiteUrl": "https://acriumautomated.com/connect",
   "icons": [
     {

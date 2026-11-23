@@ -4,7 +4,7 @@ Instructions for an AI agent (e.g. Cline) connecting Acrium as a **remote** MCP 
 
 ## Requirements
 
-- An Acrium account. If the user doesn't have one, ask them to sign up at https://acriumautomated.com/setup. Setup is free; the tools are switched on by a Connect or Connect + Voice plan (7-day free trial for new customers, card required).
+- An Acrium account. If the user doesn't have one, ask them to sign up at https://acriumautomated.com/setup. Setup is free; the tools are switched on by a Launch, Orbit or Agency plan (14-day free trial, no card needed).
 - An MCP client that supports remote servers over Streamable HTTP.
 
 ## Connection details

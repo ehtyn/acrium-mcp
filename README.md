@@ -13,7 +13,7 @@ Acrium plugs the AI a business already uses (Claude, ChatGPT, Grok, Meta AI/Muse
 - **Run Google Ads**: create campaigns, ad groups, search and display ads and keywords; set geo targeting; read campaign stats; pause or enable campaigns.
 - **Post and schedule to social media**: TikTok, YouTube, X, Pinterest, Bluesky, Facebook, Instagram, Threads and LinkedIn.
 - **Manage a Shopify store and inventory**: products, discounts, photos, orders and reports; inventory and SKU sync.
-- **Make and answer phone calls** (Connect + Voice plan): a real phone number for the workspace. The AI places calls from a brief, and incoming calls are answered with instructions the owner sets. Transcripts go back to the AI.
+- **Make and answer phone calls** (Orbit plan): a real phone number for the workspace. The AI places calls from a brief, and incoming calls are answered with instructions the owner sets. Transcripts go back to the AI.
 
 The customer's own AI does the thinking. **Anything that can start or raise ad spend waits for the owner's approval** in the Acrium dashboard, whichever AI asked; pausing never waits. Ad spend is billed by Google to the business's own account. The Approval Gate can also hold posts, store changes and emails, and TikTok posts always need a person's approval.
 
@@ -103,9 +103,9 @@ The full, current list with input schemas is in the public [server card](https:/
 | Social posting | `publish_post`, `schedule_post`, `list_scheduled_posts`, `cancel_scheduled_post` |
 | Shopify | `shopify_list_products`, `shopify_create_product`, `shopify_create_discount`, `shopify_list_orders`, `shopify_get_report` |
 | Inventory | `list_inventory`, `adjust_inventory_stock`, `add_sku_alias` |
-| Calling (Connect + Voice) | `provision_phone_number`, `place_call`, `list_calls`, `set_inbound_instructions` |
+| Calling (Orbit) | `provision_phone_number`, `place_call`, `list_calls`, `set_inbound_instructions` |
 | Notes & attention queue | `list_notes`, `search_notes`, `add_note`, `get_attention_items` |
-| Video & voiceovers | `make_video`, `get_render_status`, `generate_voiceover` |
+| Media & voiceovers | `create_upload_url`, `import_media_from_url`, `generate_voiceover` |
 | Roles | `list_roles`, `send_message`, `read_messages` |
 | Approvals & control | `list_pending_actions`, `decide_pending_action`, `set_approval_gate`, `set_test_mode` |
 
@@ -113,10 +113,11 @@ Reads work on any connection. Writes depend on the permissions granted when conn
 
 ## Plans
 
-- **Connect**: free for 7 days, then $9.99/month: everything above except calling and voiceovers. 30 minutes of video rendering a month, 5 GB of storage. No AI credits needed: the customer's own AI does the thinking.
-- **Connect + Voice**: free for 7 days, then $29.99/month: everything in Connect, plus a phone number, calls both ways and AI voiceovers. 12,000 AI credits a month pay for calls and voiceovers (1,000 during the free trial). 60 minutes of video rendering a month, 20 GB of storage.
+- **Launch**: $21.49/month, after a 14-day free trial with no card: everything above except calling and voiceovers. 5 GB of storage. No AI credits needed: the customer's own AI does the thinking.
+- **Orbit**: $47.49/month: everything in Launch, plus a phone number, calls both ways and AI voiceovers. 12,000 AI credits a month pay for calls and voiceovers. 20 GB of storage.
+- **Agency**: $89/month for up to 10 client workspaces, each with everything in Launch; $8/month for each extra workspace. Seats are free, and clients can approve their own posts for free.
 
-New customers get a 7-day free trial on either plan, once per customer; a card is required at checkout, and cancelling in Billing before the trial ends means no charge. After that, monthly, cancel any time. Account setup is free.
+Try free for 14 days, no card needed (Launch; calls, phone numbers and voiceovers aren't in the trial). After that, monthly, cancel any time. Acrium doesn't make or edit videos: your AI can edit a video in its own environment, then upload it to post. Current details always live at [acriumautomated.com/llms.txt](https://acriumautomated.com/llms.txt).
 
 ## Links
 
